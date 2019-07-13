@@ -5,7 +5,7 @@ Graph::Graph()
 	vertexAmount = 0;//start at 0
 	for (int rows = 0;  rows < MAXSIZE; rows++)
 		for (int columns = 0; columns < MAXSIZE; columns++)
-			adyacencyMatrix[rows][columns] = 0;
+			adyacencyMatrix[rows][columns] = 0.0;
 		
 }
 
@@ -34,11 +34,19 @@ void Graph::addEdge(int source, int target, int value)
 	adyacencyMatrix[source][target] = value;
 }
 
+void Graph::addEdgeUndirected(int source, int target, int value)
+{
+	assert(source < MAXSIZE && target < MAXSIZE);
+
+	adyacencyMatrix[source][target] = value;
+	adyacencyMatrix[target][source] = value;
+}
+
 void Graph::removeEdge(int source, int target)
 {
 	assert(source < MAXSIZE && target < MAXSIZE);
 
-	adyacencyMatrix[source][target] = 0;
+	adyacencyMatrix[source][target] = 0.0;
 }
 
 
@@ -69,15 +77,12 @@ int Graph::size() const
 	return vertexAmount;
 }
 
-std::set<int> Graph::neighbors(int vertex) const
-{
-	return std::set<int>();
-}
 
 void Graph::printMatrix()
 {
 	for (int rows = 0; rows < MAXSIZE; rows++)
 	{
+		std::cout << vecVertices[rows].name << " ";
 		for (int col = 0; col < MAXSIZE; col++)
 		{
 			std::cout << adyacencyMatrix[rows][col] << " - ";
