@@ -77,6 +77,12 @@ int Graph::size() const
 	return vertexAmount;
 }
 
+float Graph::getValueInMatrix(int source, int target) const
+{
+	//first colums then rows
+	return adyacencyMatrix[source][target];
+}
+
 
 void Graph::printMatrix()
 {

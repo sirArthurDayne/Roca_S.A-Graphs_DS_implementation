@@ -64,7 +64,7 @@ public:
 };
 
 //////////////////////STATE MACHINE//////////////////
-enum STATES { PRESENTATION, MAIN_MENU, TRIP_DISTANCE, TRIP_COST, TRIP_TIME, GRAPH_VISUAL};
+enum STATES { PRESENTATION, MAIN_MENU, DISTANCE_MATRIX, TIME_MATRIX, COST_MATRIX, GRAPH_VISUAL};
 
 
 //////////////////////MAIN APP CLASS////////////////////
@@ -79,8 +79,16 @@ private:
 	
 	//handles the input on screen
 	TextField textManager = TextField(*this);
-
+	
 	int mainMenuOption;
+
+	//constants
+	int matrixX1 = 70;
+	int matrixY1 = 50;
+
+	int flightSpeed = 945;
+	float pricePerMinute = 1.56;
+	
 public:
 	GraphsProyect();
 private:
@@ -88,13 +96,31 @@ private:
 	bool OnUserUpdate(float deltaTime) override;
 	
 	void SetUpVertices();
-	void SetupEdges();
+	void ModifyEdge(Graph& g);
+	//DISTANCE MATRIX 
+	void SetupDistanceMatrixEdges();
+	
+	//TIME MATRIX 
+	void SetUpTimeMatrixEdges();
+	
+	
+	//COST MATRIX
+	void SetUpCostMatrixEdges();
+
+	
 	//DRAW MENUS
 	void DrawPresentation();
 	void DrawMainMenu();
-	bool DrawTripDistance();
-	bool DrawTripCost();
-	bool DrawTripTime();
+
+	bool DrawDistanceMatrix();
+	bool DrawTimeMatrix();
+	bool DrawCostMatrix();
+	
 	bool DrawGraphVisual();
+	
+	//aux methods
+	float getTimeInMin(float distance);
+	float getCostInDollars(float minutes);
+
 };
 

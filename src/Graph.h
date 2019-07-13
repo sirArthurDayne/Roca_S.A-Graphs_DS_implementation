@@ -12,13 +12,6 @@ public:
 	Vertex(std::string name, int id) : name(name), vertexID(id) { }
 };
 
-struct Edge
-{
-	Vertex* target;//target node
-	Edge* next;
-};
-
-
 class Graph
 {
 public:
@@ -31,13 +24,14 @@ public:
 	bool isEdge(Vertex source, Vertex target);
 	bool isVertexInArray(const Vertex& v);
 	int size() const;
+	float getValueInMatrix(int source, int target)const;
 	void printMatrix();
 	void BFS(Vertex origin, Vertex target);
 	void DFS(Vertex origin, Vertex target);
 private:
 	static const int MAXSIZE = 8;
 	float adyacencyMatrix[MAXSIZE][MAXSIZE];//see the conection in 2d matrix
-	std::vector<Vertex> vecVertices;
+	std::vector<Vertex> vecVertices;//Holds al vertices used in matrix
 	int  vertexAmount;
 };
 
