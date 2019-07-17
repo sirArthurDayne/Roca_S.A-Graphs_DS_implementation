@@ -64,7 +64,9 @@ public:
 };
 
 //////////////////////STATE MACHINE//////////////////
-enum STATES { PRESENTATION, MAIN_MENU, DISTANCE_MATRIX, TIME_MATRIX, COST_MATRIX, GRAPH_VISUAL};
+enum STATES { PRESENTATION, MAIN_MENU, DISTANCE_ROUTES, TIME_ROUTES, 
+	COST_ROUTES, CONSULTING_MENU, INSERT_PATH, PATH_DISTANCE, PATH_TIME, PATH_COST};
+
 
 
 //////////////////////MAIN APP CLASS////////////////////
@@ -72,22 +74,32 @@ class GraphsProyect : public olc::PixelGameEngine
 {
 private:
 	STATES state;
+	Vertex locations[8];//holds al vertex that will be using in the graphs
+	//default graphs
 	Graph DistanceMatrix;
 	Graph CostMatrix;
 	Graph TimeMatrix;
-	Vertex locations[8];//holds al vertex that will be using in the graphs
-	
+
+	//path related
+	Graph UserPathDistanceMatrix;
+
+	//user node path
+	int userVertexSelected;
+	Vertex UserNodePick;
+	float userComparisonValue;
+	int valueType;//0: distance, 1: time, 2:costs
+	int greaterOrSmaller;//0: greater, 1: smaller, 2: equal
+
 	//handles the input on screen
 	TextField textManager = TextField(*this);
 	
-	int mainMenuOption;
 
-	//constants
-	int matrixX1 = 70;
-	int matrixY1 = 50;
-
-	int flightSpeed = 945;
-	float pricePerMinute = 1.56;
+	//constants for drawing
+	const int matrixX1 = 70;
+	const int matrixY1 = 50;
+	//constants for units convertion
+	const int flightSpeed = 945;
+	const float pricePerMinute = 1.56;
 	
 public:
 	GraphsProyect();
@@ -95,30 +107,28 @@ private:
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float deltaTime) override;
 	
-	void SetUpVertices();
-	void ModifyEdge(Graph& g);
-	//DISTANCE MATRIX 
+	//AIRLINE LOCATIONS
+	void SetupDefaultVertices();
+	//AIRLINE DISTANCE MATRIX 
 	void SetupDistanceMatrixEdges();
-	
-	//TIME MATRIX 
+	//AIRLINE TIME MATRIX 
 	void SetUpTimeMatrixEdges();
-	
-	
-	//COST MATRIX
+	//AIRLINE COST MATRIX
 	void SetUpCostMatrixEdges();
 
-	
 	//DRAW MENUS
-	void DrawPresentation();
+	void DrawPresentation();                 
 	void DrawMainMenu();
+	void DrawConsultingMenu();
+	void DrawInsertPathMenu();
+	//DRAW DEFAULT AIRLINE INFO MATRICES
+	void DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string title);
+	
+	//FUNCTIONS FOR PATHS
+	void FindPathsByDistance(Graph& g, int vertexOrigin, int value);
 
-	bool DrawDistanceMatrix();
-	bool DrawTimeMatrix();
-	bool DrawCostMatrix();
-	
-	bool DrawGraphVisual();
-	
 	//aux methods
+	int minDistance(int distances[], bool sptSet[]);
 	float getTimeInMin(float distance);
 	float getCostInDollars(float minutes);
 

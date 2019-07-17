@@ -5,7 +5,13 @@ Graph::Graph()
 	vertexAmount = 0;//start at 0
 	for (int rows = 0;  rows < MAXSIZE; rows++)
 		for (int columns = 0; columns < MAXSIZE; columns++)
+		{
+			if (rows == columns)
 			adyacencyMatrix[rows][columns] = 0.0;
+			else
+			adyacencyMatrix[rows][columns] = INF;
+			
+		}
 		
 }
 
@@ -83,16 +89,3 @@ float Graph::getValueInMatrix(int source, int target) const
 	return adyacencyMatrix[source][target];
 }
 
-
-void Graph::printMatrix()
-{
-	for (int rows = 0; rows < MAXSIZE; rows++)
-	{
-		std::cout << vecVertices[rows].name << " ";
-		for (int col = 0; col < MAXSIZE; col++)
-		{
-			std::cout << adyacencyMatrix[rows][col] << " - ";
-		}
-		std::cout << std::endl;
-	}
-}

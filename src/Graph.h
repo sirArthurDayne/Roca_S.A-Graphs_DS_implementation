@@ -1,6 +1,8 @@
 #pragma once
-#include"olcPixelGameEngine.h"
+#include"olcPixelGameEngine.h"//for
 #include<assert.h>
+
+#define INF 1000000000
 
 struct Vertex //also call Node
 {
@@ -25,9 +27,7 @@ public:
 	bool isVertexInArray(const Vertex& v);
 	int size() const;
 	float getValueInMatrix(int source, int target)const;
-	void printMatrix();
-	void BFS(Vertex origin, Vertex target);
-	void DFS(Vertex origin, Vertex target);
+
 private:
 	static const int MAXSIZE = 8;
 	float adyacencyMatrix[MAXSIZE][MAXSIZE];//see the conection in 2d matrix
