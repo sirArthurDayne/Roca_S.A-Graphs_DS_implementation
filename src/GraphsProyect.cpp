@@ -13,10 +13,7 @@ bool GraphsProyect::OnUserCreate()
 	SetupDistanceMatrixEdges();
 	SetUpTimeMatrixEdges();
 	SetUpCostMatrixEdges();
-	
-	mapa.LoadFromFile("src/mapaPanama2.png");
-	
-	//LoadSplinesVertices();
+
 	return true;
 }
 
@@ -139,13 +136,22 @@ void GraphsProyect::SetUpCostMatrixEdges()
 void GraphsProyect::DrawPresentation()
 {
 	Clear(olc::BLACK);
-	DrawString(ScreenWidth() / 2 - 90, 160, "DATA STRUCTURE PROYECT: GRAPHS");
+	Clear(olc::BLACK);
 
-	DrawString(ScreenWidth() / 2 - 80, 250, "DEVELOP BY: ");
-	DrawString(ScreenWidth() / 2 - 100, 300, "LAMELA, XAVIER (SirArthurDayne)");
+	DrawString(ScreenWidth() / 2 - 150, 50, "UNIVERSIDAD TECNOLOGICA DE PANAMA");
+	DrawString(ScreenWidth() / 2 - 220, 60, "FACULTAD DE INGENIERIA DE SISTEMAS COMPUTACIONALES");
+	DrawString(ScreenWidth() / 2 - 220, 100, "DEPARTAMENTO DE LICENCIATURA EN INGENIERIA DE SOFTWARE");
+	DrawString(ScreenWidth() / 2 - 180, 130, "ESTRUCTURA Y REPRESENTACION DE DATOS 1");
 
-	//DrawString(ScreenWidth() / 2 - 120, ScreenHeight() - 50, "SPECIAL THANKS TO ZLEAPINGBEAR");
-	DrawString(ScreenWidth() - 200, ScreenHeight() - 25, "'CLICK' TO CONTINUE...");
+	DrawString(ScreenWidth() / 2 - 90, 160, "PROYECTO III: GRAFOS");
+	DrawString(ScreenWidth() / 2 - 120, 200, "PROF.: NICHOLAS BELIZ OSORIO");
+
+	DrawString(ScreenWidth() / 2 - 80, 250, "INTEGRANTES: ");
+	DrawString(ScreenWidth() / 2 - 100, 300, "LAMELA, XAVIER 8-956-720 ");
+	DrawString(ScreenWidth() / 2 - 100, 330, "HARBIN, CLYDE 8-927-1305 ");
+	DrawString(ScreenWidth() / 2 - 100, 360, "CHAVEZ, LUIS 8-947-1001");
+
+	DrawString(ScreenWidth() / 2 - 65, ScreenHeight() - 50, "I SEMESTRE 2019");
 
 	if (GetMouse(0).bPressed)
 		state = MAIN_MENU;
@@ -191,9 +197,11 @@ void GraphsProyect::DrawMainMenu()
 
 	FillRect(textX1, textY1 + 120, textX1 + 100, 20, olc::DARK_MAGENTA);
 	DrawString(textX1, textY1 + 120, "2. CONSULTAR RUTAS");
+	DrawString(ScreenWidth() / 2 - 300, 400, "LAMELA, XAVIER 8-956-720 ");
+	DrawString(ScreenWidth() / 2 - 300, 430, "HARBIN, CLYDE 8-927-1305 ");
+	DrawString(ScreenWidth() / 2 - 300, 460, "CHAVEZ, LUIS 8-947-1001");
 
-
-	DrawString(textX1, ScreenHeight() - 100, "CLIKEA PARA SELECCIONAR...");
+	DrawString(textX1 + 200, ScreenHeight() - 50, "CLIKEA PARA SELECCIONAR...");
 
 }
 
@@ -216,14 +224,14 @@ void GraphsProyect::DrawConsultingMenu()
 	}
 
 	Clear(olc::BLACK);
-	DrawString(ScreenWidth() / 2 - 50, 20, "CONSULTING THE AIRLINE...");
+	DrawString(ScreenWidth() / 2 - 150, 20, "CONSULTAS DE RUTAS,TIEMPO O COSTES...");
 	FillRect(textX1, textY1, textX1 + 150, 20, olc::DARK_RED);
-	DrawString(textX1, textY1, "1. SHOW RESULTS ON SCREEN");
+	DrawString(textX1, textY1, "1. MOSTRAR RESULTADOS EN PANTALLA");
 
 	FillRect(textX1, textY1 + 160, textX1 + 150, 20, olc::DARK_YELLOW);
-	DrawString(textX1, textY1 + 160, "2.ADD PATH");
+	DrawString(textX1, textY1 + 160, "2.INSERTAR RUTA");
 
-	DrawString(textX1, ScreenHeight() - 100, "CLICK TO SELECT...");
+	DrawString(textX1, ScreenHeight() - 100, "CLIKEA PARA SELECCIONAR...");
 
 	if (GetKey(olc::M).bReleased)
 		state = MAIN_MENU;
@@ -360,7 +368,8 @@ void GraphsProyect::DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string
 void GraphsProyect::DrawVisualNode()
 {
 	Clear(olc::BLACK);
-	DrawSprite(0, 0, &mapa);
+	//DrawSprite(0, 0, &mapa);
+	DrawString(ScreenWidth() / 2, ScreenHeight() / 2, "PROXIMAMENTE...");
 }
 
 
@@ -477,9 +486,5 @@ float GraphsProyect::getCostInDollars(float minutes)
 
 void GraphsProyect::LoadSplinesVertices()
 {
-	for (int i = 0; i < MAXSIZE; i++)
-	path.vecPoints2d.push_back({25.0f *(i + 1), 50.0f * (i + 1)});
-
-	path.vecLength.push_back(0.0f);
-
+	
 }

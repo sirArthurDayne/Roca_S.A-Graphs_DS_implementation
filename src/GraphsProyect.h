@@ -1,6 +1,5 @@
 #pragma once
 #include"Graph.h"
-#include"Splines.h"
 ///////////////////////TEXT FIELD MANAGER////////////
 class TextField {
 private:
@@ -77,7 +76,6 @@ private:
 	Graph DistanceMatrix;
 	Graph CostMatrix;
 	Graph TimeMatrix;
-	olc::Sprite mapa;
 	//path related
 	float shortest_distances[8];//saves al distances,times or costs gen by diskjstra
 
@@ -100,8 +98,9 @@ private:
 	const float pricePerMinute = 1.56;
 	
 
-	Splines path;
-	int lineSelected;
+	//olc::Sprite mapa;
+	//Splines path;
+	//int lineSelected;//the current line on array
 public:
 	GraphsProyect();
 private:
@@ -142,6 +141,5 @@ private:
 
 	//Splines
 	void LoadSplinesVertices();
-	void DrawSplines();
 };
 
