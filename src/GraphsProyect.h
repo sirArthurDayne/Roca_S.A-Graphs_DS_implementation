@@ -1,6 +1,6 @@
 #pragma once
 #include"Graph.h"
-
+#include"Splines.h"
 ///////////////////////TEXT FIELD MANAGER////////////
 class TextField {
 private:
@@ -64,10 +64,8 @@ public:
 };
 
 //////////////////////STATE MACHINE//////////////////
-enum STATES { PRESENTATION, MAIN_MENU, DISTANCE_ROUTES, TIME_ROUTES, 
-	COST_ROUTES, CONSULTING_MENU, INSERT_PATH, SHOW_RESULTS};
-
-
+enum STATES { PRESENTATION, MAIN_MENU, AIRLINE_INFO, 
+			CONSULTING_MENU, INSERT_PATH, SHOW_RESULTS};
 
 //////////////////////MAIN APP CLASS////////////////////
 class GraphsProyect : public olc::PixelGameEngine
@@ -79,7 +77,7 @@ private:
 	Graph DistanceMatrix;
 	Graph CostMatrix;
 	Graph TimeMatrix;
-
+	olc::Sprite mapa;
 	//path related
 	float shortest_distances[8];//saves al distances,times or costs gen by diskjstra
 
@@ -101,6 +99,9 @@ private:
 	const int flightSpeed = 945;
 	const float pricePerMinute = 1.56;
 	
+
+	Splines path;
+	int lineSelected;
 public:
 	GraphsProyect();
 private:
@@ -125,6 +126,8 @@ private:
 	//DRAW DEFAULT AIRLINE INFO MATRICES
 	void DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string title);
 	
+	//VISUAL MODE
+	void DrawVisualNode();
 
 	//FUNCTIONS FOR PATHS
 	void FindShortesPath(Graph& g, Vertex origin);
@@ -136,5 +139,9 @@ private:
 	float getTimeInMin(float distance);
 	float getCostInDollars(float minutes);
 
+
+	//Splines
+	void LoadSplinesVertices();
+	void DrawSplines();
 };
 

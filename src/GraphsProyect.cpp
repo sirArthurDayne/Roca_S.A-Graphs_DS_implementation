@@ -14,6 +14,9 @@ bool GraphsProyect::OnUserCreate()
 	SetUpTimeMatrixEdges();
 	SetUpCostMatrixEdges();
 	
+	mapa.LoadFromFile("src/mapaPanama2.png");
+	
+	//LoadSplinesVertices();
 	return true;
 }
 
@@ -26,14 +29,24 @@ bool GraphsProyect::OnUserUpdate(float deltaTime)
 	if (state == MAIN_MENU)
 		DrawMainMenu();	
 	
-	if (state == DISTANCE_ROUTES)
-		DrawAirlineMatrix(DistanceMatrix, olc::VERY_DARK_RED, "DISTANCE MATRIX (KM)");
+	if (state == AIRLINE_INFO)
+	{
+		static int selection = 1;
 
-	if (state == TIME_ROUTES)
-		DrawAirlineMatrix(TimeMatrix, olc::DARK_BLUE, "TIME MATRIX (minutes)");
-
-	if (state == COST_ROUTES)
+		if		(GetKey(olc::Q).bPressed) selection = 1;
+		else if (GetKey(olc::W).bPressed) selection = 2;
+		else if (GetKey(olc::E).bPressed) selection = 3;
+		else if (GetKey(olc::R).bPressed) selection = 4;
+		
+		if (selection == 1)
+			DrawAirlineMatrix(DistanceMatrix, olc::VERY_DARK_RED, "DISTANCE MATRIX (KM)");
+		if (selection == 2)
+			DrawAirlineMatrix(TimeMatrix, olc::DARK_BLUE, "TIME MATRIX (minutes)");
+		if (selection == 3)
 		DrawAirlineMatrix(CostMatrix, olc::VERY_DARK_YELLOW, "COST MATRIX ($)");
+		if (selection == 4)
+			DrawVisualNode();
+	}
 
 	if (state == CONSULTING_MENU)
 		DrawConsultingMenu();
@@ -43,13 +56,7 @@ bool GraphsProyect::OnUserUpdate(float deltaTime)
 	
 
 	if (state == SHOW_RESULTS)
-	{
-		//TO DO PATH FOR DISTANCE
-		DrawPathOnScreen();
-		
-	}
-	
-
+		DrawPathOnScreen();	
 
 	if (GetKey(olc::ESCAPE).bPressed)
 		return false;
@@ -157,13 +164,13 @@ void GraphsProyect::DrawMainMenu()
 		int mouseY = GetMouseY();
 
 		if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 && mouseY < textY1 + 20)
-			state = DISTANCE_ROUTES;
+			state = AIRLINE_INFO;
 
-		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 40 && mouseY < (textY1 + 40) + 20)
-			state = TIME_ROUTES;
-
-		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 80 && mouseY < (textY1 + 80) + 20)
-			state = COST_ROUTES;
+		//else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 40 && mouseY < (textY1 + 40) + 20)
+		//	state = TIME_ROUTES;
+		//
+		//else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 80 && mouseY < (textY1 + 80) + 20)
+		//	state = COST_ROUTES;
 
 		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 120 && mouseY < (textY1 + 120) + 20)
 			state = CONSULTING_MENU;
@@ -174,19 +181,19 @@ void GraphsProyect::DrawMainMenu()
 	Clear(olc::BLACK);
 	DrawString(ScreenWidth() / 2 - 50, 20, "ROCA AIRLINE S.A");
 	FillRect(textX1, textY1, textX1 + 100, 20, olc::DARK_RED);
-	DrawString(textX1, textY1, "1. SEE DISTANCE MATRIX (Kilometers)");
+	DrawString(textX1, textY1, "1. VER RUTAS DE VUELO (MATRICES)");
 
-	FillRect(textX1, textY1 + 40, textX1 + 100, 20, olc::DARK_BLUE);
-	DrawString(textX1, textY1 + 40, "2. SEE TIME TRAVEL MATRIX (minutes)");
-
-	FillRect(textX1, textY1 + 80, textX1 + 100, 20, olc::DARK_GREEN);
-	DrawString(textX1, textY1 + 80, "3. SEE COST MATRIX ($)");
+	//FillRect(textX1, textY1 + 40, textX1 + 100, 20, olc::DARK_BLUE);
+	//DrawString(textX1, textY1 + 40, "2. SEE TIME TRAVEL MATRIX (minutes)");
+	//
+	//FillRect(textX1, textY1 + 80, textX1 + 100, 20, olc::DARK_GREEN);
+	//DrawString(textX1, textY1 + 80, "3. SEE COST MATRIX ($)");
 
 	FillRect(textX1, textY1 + 120, textX1 + 100, 20, olc::DARK_MAGENTA);
-	DrawString(textX1, textY1 + 120, "4. CONSULT INFO ABOUT ROUTES");
+	DrawString(textX1, textY1 + 120, "2. CONSULTAR RUTAS");
 
 
-	DrawString(textX1, ScreenHeight() - 100, "CLICK TO SELECT...");
+	DrawString(textX1, ScreenHeight() - 100, "CLIKEA PARA SELECCIONAR...");
 
 }
 
@@ -350,6 +357,12 @@ void GraphsProyect::DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string
 		state = MAIN_MENU;
 }
 
+void GraphsProyect::DrawVisualNode()
+{
+	Clear(olc::BLACK);
+	DrawSprite(0, 0, &mapa);
+}
+
 
 //implementation of diskstra algorithm//
 void GraphsProyect::FindShortesPath(Graph& g, Vertex origin)
@@ -459,4 +472,14 @@ float GraphsProyect::getTimeInMin(float distance)
 float GraphsProyect::getCostInDollars(float minutes)
 {
 	return (minutes != INF) ? pricePerMinute * minutes : INF;
+}
+
+
+void GraphsProyect::LoadSplinesVertices()
+{
+	for (int i = 0; i < MAXSIZE; i++)
+	path.vecPoints2d.push_back({25.0f *(i + 1), 50.0f * (i + 1)});
+
+	path.vecLength.push_back(0.0f);
+
 }
