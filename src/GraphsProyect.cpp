@@ -35,7 +35,6 @@ bool GraphsProyect::OnUserUpdate(float deltaTime)
 	if (state == COST_ROUTES)
 		DrawAirlineMatrix(CostMatrix, olc::VERY_DARK_YELLOW, "COST MATRIX ($)");
 
-	//ALL THE STATES FOR CALCULATING PATH AND DRAW MATRICES
 	if (state == CONSULTING_MENU)
 		DrawConsultingMenu();
 
@@ -43,22 +42,13 @@ bool GraphsProyect::OnUserUpdate(float deltaTime)
 		DrawInsertPathMenu();
 	
 
-	if (state == PATH_DISTANCE)
+	if (state == SHOW_RESULTS)
 	{
 		//TO DO PATH FOR DISTANCE
 		DrawPathOnScreen();
 		
 	}
-	if (state == PATH_TIME)
-	{
-		//TO DO PATH FOR TIME
-		Clear(olc::DARK_GREY);
-	}
-	if (state == PATH_COST)
-	{
-		//TO DO PATH FOR COST
-		Clear(olc::DARK_BLUE);
-	}
+	
 
 
 	if (GetKey(olc::ESCAPE).bPressed)
@@ -182,7 +172,7 @@ void GraphsProyect::DrawMainMenu()
 
 
 	Clear(olc::BLACK);
-	DrawString(ScreenWidth() / 2 - 50, 20, "AIRLINE INFORMATION");
+	DrawString(ScreenWidth() / 2 - 50, 20, "ROCA AIRLINE S.A");
 	FillRect(textX1, textY1, textX1 + 100, 20, olc::DARK_RED);
 	DrawString(textX1, textY1, "1. SEE DISTANCE MATRIX (Kilometers)");
 
@@ -212,13 +202,7 @@ void GraphsProyect::DrawConsultingMenu()
 		int mouseY = GetMouseY();
 
 		if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 && mouseY < textY1 + 20)
-			state = PATH_DISTANCE;
-
-		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 40 && mouseY < (textY1 + 40) + 20)
-			state = PATH_TIME;
-
-		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 80 && mouseY < (textY1 + 80) + 20)
-			state = PATH_COST;
+			state = SHOW_RESULTS;
 
 		else if (mouseX > textX1 && mouseX < textX1 + 200 && mouseY > textY1 + 160 && mouseY < (textY1 + 160) + 20)
 			state = INSERT_PATH;
@@ -227,16 +211,10 @@ void GraphsProyect::DrawConsultingMenu()
 	Clear(olc::BLACK);
 	DrawString(ScreenWidth() / 2 - 50, 20, "CONSULTING THE AIRLINE...");
 	FillRect(textX1, textY1, textX1 + 150, 20, olc::DARK_RED);
-	DrawString(textX1, textY1, "1. SEE PATH BY SOME START, DESTINY AND DISTANCE(km)");
-
-	FillRect(textX1, textY1 + 40, textX1 + 150, 20, olc::DARK_BLUE);
-	DrawString(textX1, textY1 + 40, "2. SEE PATH BY SOME START, DESTINY AND TIME(minutes)");
-
-	FillRect(textX1, textY1 + 80, textX1 + 150, 20, olc::DARK_GREEN);
-	DrawString(textX1, textY1 + 80, "3. SEE PATH BY SOME START, DESTINY AND COST($)");
+	DrawString(textX1, textY1, "1. SHOW RESULTS ON SCREEN");
 
 	FillRect(textX1, textY1 + 160, textX1 + 150, 20, olc::DARK_YELLOW);
-	DrawString(textX1, textY1 + 160, "4.ADD PATH");
+	DrawString(textX1, textY1 + 160, "2.ADD PATH");
 
 	DrawString(textX1, ScreenHeight() - 100, "CLICK TO SELECT...");
 
@@ -306,6 +284,7 @@ void GraphsProyect::DrawInsertPathMenu()
 	if (GetKey(olc::B).bPressed)
 	{
 		testExpression = "";
+		reading = true;
 		state = CONSULTING_MENU;
 	}
 
