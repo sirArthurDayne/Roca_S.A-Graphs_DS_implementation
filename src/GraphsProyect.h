@@ -81,12 +81,12 @@ private:
 	Graph TimeMatrix;
 
 	//path related
-	Graph UserPathDistanceMatrix;
+	float shortest_distances[8];//saves al distances,times or costs gen by diskjstra
 
 	//user node path
 	int userVertexSelected;
 	Vertex UserNodePick;
-	float userComparisonValue;
+	float userComparisonValue;//the input value of user 
 	int valueType;//0: distance, 1: time, 2:costs
 	int greaterOrSmaller;//0: greater, 1: smaller, 2: equal
 
@@ -121,14 +121,18 @@ private:
 	void DrawMainMenu();
 	void DrawConsultingMenu();
 	void DrawInsertPathMenu();
+	
 	//DRAW DEFAULT AIRLINE INFO MATRICES
 	void DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string title);
 	
-	//FUNCTIONS FOR PATHS
-	void FindPathsByDistance(Graph& g, int vertexOrigin, int value);
 
+	//FUNCTIONS FOR PATHS
+	void FindShortesPath(Graph& g, Vertex origin);
+	//DRAW PATH FOUNDS
+	void DrawPathOnScreen();
+	
 	//aux methods
-	int minDistance(int distances[], bool sptSet[]);
+	int minDistance(float distances[], bool sptSet[]);
 	float getTimeInMin(float distance);
 	float getCostInDollars(float minutes);
 

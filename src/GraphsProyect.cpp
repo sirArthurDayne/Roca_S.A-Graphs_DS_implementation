@@ -40,14 +40,13 @@ bool GraphsProyect::OnUserUpdate(float deltaTime)
 		DrawConsultingMenu();
 
 	if (state == INSERT_PATH)
-	{
 		DrawInsertPathMenu();
-	}
+	
 
 	if (state == PATH_DISTANCE)
 	{
 		//TO DO PATH FOR DISTANCE
-		Clear(olc::CYAN);
+		DrawPathOnScreen();
 		
 	}
 	if (state == PATH_TIME)
@@ -293,6 +292,16 @@ void GraphsProyect::DrawInsertPathMenu()
 	{
 		reading = false;
 		UserNodePick = locations[userVertexSelected];//set vertex
+		userComparisonValue = std::stof(testExpression);//set the value of user
+
+		//call the algorithm for the selected matrix
+		if (valueType == 0)//distance
+			FindShortesPath(DistanceMatrix, UserNodePick);
+		else if (valueType == 1)//time calculations
+			FindShortesPath(TimeMatrix, UserNodePick);
+		else if (valueType == 2)//cost calculations
+			FindShortesPath(CostMatrix, UserNodePick);
+
 	}
 	if (GetKey(olc::B).bPressed)
 	{
@@ -363,40 +372,90 @@ void GraphsProyect::DrawAirlineMatrix(Graph& g, olc::Pixel bg_color, std::string
 }
 
 
-//implementation of diskstra algorithm
-void GraphsProyect::FindPathsByDistance(Graph& g, int vertexOrigin, int value)
+//implementation of diskstra algorithm//
+void GraphsProyect::FindShortesPath(Graph& g, Vertex origin)
 {
-	int distancesArray[8];
-	bool sptSet[8];
-	
+		//Este arreglo guardara la distancia más corta desde el origen escogido hasta i
+	bool sptSet[8]; //Será verdad siempre y cuando el vertice i, este incluido en el arreglo de distancia
+					// sptSet[i] will be true if vertex i is included in shortest 
+					// path tree or shortest distance from src to i is finalized 
+
+	// Comenzar todas las dist con el mayor valor posible y sptSet[i] como false 
+	for (int i = 0; i < 8; i++)
+		shortest_distances[i] = INF, sptSet[i] = false;
+
+	// Lógicamente, la distancia de un punto hasta sí mismo es de cero
+	shortest_distances[origin.vertexID] = 0;
+
+	// Encontrar el camino más corto los vertices 
+	for (int count = 0; count < 7; count++)
+	{
+		// Escoger el vertice minimo de la distancia de los vertices que no han sido procesados,
+		// en la primera iteracción u siempre es igual al origen 
+		int u = minDistance(shortest_distances, sptSet);
+
+		// Marcando el vertice usado como verdadero 
+		sptSet[u] = true;
+
+		// Actualizando la distancia de los vertices adyacentes del vertice escogido 
+		for (int v = 0; v < 8; v++)
+
+			// Actualizar la dist[v] solo si no está en sptSet, hay una arista de u a v, y el pesos total de v a u es más pequeño que el actual valor de dist[v]
+			if (sptSet[v] == false && g.adyacencyMatrix[u][v] && shortest_distances[u] != INF
+				&& shortest_distances[u] + g.adyacencyMatrix[u][v] < shortest_distances[v])
+				shortest_distances[v] = shortest_distances[u] + g.adyacencyMatrix[u][v];
+	}
+}
+void GraphsProyect::DrawPathOnScreen()
+{
+	if (GetKey(olc::M).bReleased)
+		state = CONSULTING_MENU;
+
+	Clear(olc::BLACK);
 	for (int i = 0; i < 8; i++)
 	{
-		distancesArray[i] = INF;
-		sptSet[i] = false;
-	}
-	distancesArray[vertexOrigin] = 0;
-
-	for (int i = 0; i < 7; i++)//7: MAXSIZE - 1
-	{
-		int u = minDistance(distancesArray, sptSet);
-
-		sptSet[i] = true;
-
-		for (int v = 0; v < 8; v++)
+		if (valueType == 0) //distancias
 		{
-			if (!sptSet[v] && g.getValueInMatrix(u,v) != 0.0 && distancesArray[u] != INF
-				&& distancesArray[u] + g.getValueInMatrix(u,v) < distancesArray[v])
-				distancesArray[v] = distancesArray[u] + g.getValueInMatrix(u,v);
+			//Si estamos verificando q sea mayor && Si distancia es mayor al valor del user
+			if (greaterOrSmaller == 0 && shortest_distances[i] > userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) +" KM");
+			else if (greaterOrSmaller == 1 && shortest_distances[i] < userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) +" KM");
+			else if (greaterOrSmaller == 2 && shortest_distances[i] == userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) +" KM");
+		}
+		else if (valueType == 1)//tiempo
+		{
+			//Si estamos verificando q sea mayor && Si tiempo es mayor al valor del user
+			if (greaterOrSmaller == 0 && shortest_distances[i] > userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " MIN");
+			else if (greaterOrSmaller == 1 && shortest_distances[i] < userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " MIN");
+			else if (greaterOrSmaller == 2 && shortest_distances[i] == userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " MIN");
+
+		}
+		else if (valueType == 2)//costos
+		{
+			//Si estamos verificando q sea mayor && Si costos es mayor al valor del user
+			if (greaterOrSmaller == 0 && shortest_distances[i] > userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " BL.");
+			else if (greaterOrSmaller == 1 && shortest_distances[i] < userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " BL.");
+			else if (greaterOrSmaller == 2 && shortest_distances[i] == userComparisonValue)
+				DrawString(matrixX1, matrixY1 * (i + 1), UserNodePick.name + " a " + locations[i].name + " " + std::to_string(shortest_distances[i]) + " BL.");
+
 		}
 	}
 }
 
+
 //function to find the vertex with minimum distance value, from
 // the set of vertices not yet included in shortest path tree 
-int GraphsProyect::minDistance(int distances[], bool sptSet[])
+int GraphsProyect::minDistance(float distances[], bool sptSet[])
 {
 	//Init min value
-	int min = INF;
+	float min = INF;
 	int minIndex;
 
 	for (int i = 0; i < 8; i++)
@@ -405,6 +464,7 @@ int GraphsProyect::minDistance(int distances[], bool sptSet[])
 		{
 			min = distances[i];
 			minIndex = i;
+
 		}
 	}
 
@@ -414,10 +474,10 @@ int GraphsProyect::minDistance(int distances[], bool sptSet[])
 /////////AUX FUNCTIONS////////
 float GraphsProyect::getTimeInMin(float distance)
 {
-	return (distance / flightSpeed) * 60.0;
+	return (distance != INF) ?(distance / flightSpeed) * 60.0 : INF;
 }
 
 float GraphsProyect::getCostInDollars(float minutes)
 {
-	return pricePerMinute * minutes;
+	return (minutes != INF) ? pricePerMinute * minutes : INF;
 }

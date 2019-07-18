@@ -3,7 +3,7 @@
 #include<assert.h>
 
 #define INF 1000000000
-
+static const int MAXSIZE = 8;
 struct Vertex //also call Node
 {
 public:
@@ -28,10 +28,10 @@ public:
 	int size() const;
 	float getValueInMatrix(int source, int target)const;
 
-private:
-	static const int MAXSIZE = 8;
 	float adyacencyMatrix[MAXSIZE][MAXSIZE];//see the conection in 2d matrix
+private:
+	
 	std::vector<Vertex> vecVertices;//Holds al vertices used in matrix
-	int  vertexAmount;
-};
+	int  vertexAmount;//counter of the amount of vertices at moment
+};		 
 
